@@ -1,10 +1,17 @@
 import sys
-from PySide6.QtWidgets import (
-    QMainWindow, QApplication,
-    QLabel, QCheckBox, QComboBox,  QLineEdit,
-    QLineEdit, QSpinBox, QDoubleSpinBox, QSlider
-)
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
+from PySide6.QtGui import QPalette, QColor
+
+
+class Color(QWidget):
+
+    def __init__(self, color):
+        super(Color, self).__init__()
+        self.setAutoFillBackground(True)
+
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor(color))
+        self.setPalette(palette)
 
 
 class MainWindow(QMainWindow):
@@ -14,37 +21,19 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("My App")
 
-        widget = QLineEdit()
-        widget.setMaxLength(10)
-        widget.setPlaceholderText("Enter your text")
+        layout = QVBoxLayout()
 
-        #widget.setReadOnly(True) # uncomment this to make readonly
+        layout.addWidget(Color('red'))
+        layout.addWidget(Color('green'))
+        layout.addWidget(Color('blue'))
 
-        widget.returnPressed.connect(self.return_pressed)
-        widget.selectionChanged.connect(self.selection_changed)
-        widget.textChanged.connect(self.text_changed)
-        widget.textEdited.connect(self.text_edited)
-
+        widget = QWidget()
+        widget.setLayout(layout)
         self.setCentralWidget(widget)
 
-
-    def return_pressed(self):
-        print("Return pressed!")
-        self.centralWidget().setText("BOOM!")
-
-    def selection_changed(self):
-        print("Selection changed")
-        print(self.centralWidget().selectedText())
-
-    def text_changed(self, s):
-        print("Text changed...")
-        print(s)
-
-    def text_edited(self, s):
-        print("Text edited...")
-        print(s)
-
 app = QApplication(sys.argv)
-w = MainWindow()
-w.show()
+
+window = MainWindow()
+window.show()
+
 app.exec_()
